@@ -36,6 +36,7 @@ class Mail2Neo():
             tx.create(a)
             tx.commit()
         except Exception as nex:
+            logger.error(f"error writing to Neo4j")
             logger.exception(nex)
 
 
@@ -43,7 +44,7 @@ data = []
 try:
     param = None
     for arg in sys.argv[1:]:
-        logger.info(arg)
+        logger.debug(arg)
         param = arg
  
     for line in sys.stdin:
@@ -59,16 +60,17 @@ try:
     #logger.debug(emailMsg)
     logger.warn("email parsed as such .....")
     pm = mail_parse(emailMsg)
-    logger.info("")
+    if pm['Body'] is not None:
 
-    if param is not None:
-        pm['x-src-param'] = param
-    else:
-        logger.error("no param from alias dummy")
 
-    logger.info(pm)
+        if param is not None:
+            pm['x-src-param'] = param
+        else:
+            logger.error("no param from /etc/aliases")
+
+        logger.info(pm)
  
-    m2n.write_mail_to_neo(pm)
+        m2n.write_mail_to_neo(pm)
 
 except Exception as exp:
     logger.exception( exp ) 
