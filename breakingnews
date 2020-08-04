@@ -1,7 +1,7 @@
 #!/opt/rangal/apps/python/venv3/bin/python3
 import pika
 import argparse
-from parseMail import mail_parse
+from emailParser import parse_email_parts as mail_parse
 from py2neo import Graph, Node, Relationship
 import sys
 from os import listdir
